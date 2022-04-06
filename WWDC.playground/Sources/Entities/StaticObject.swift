@@ -12,6 +12,7 @@ class StaticObject: GKEntity {
         node.physicsBody = SKPhysicsBody(polygonFrom: node.path!)
         node.physicsBody?.isDynamic = false
         node.physicsBody?.categoryBitMask = category.rawValue
+        node.physicsBody?.restitution = 0
     }
 
     required init?(coder: NSCoder) {

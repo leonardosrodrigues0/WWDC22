@@ -14,6 +14,7 @@ public class GameScene: SKScene {
 
     public override init() {
         super.init(size: Self.size)
+        physicsWorld.contactDelegate = self
     }
 
     public override func sceneDidLoad() {
@@ -48,7 +49,7 @@ public class GameScene: SKScene {
 
     private func buildPlayer1() -> Player {
         let player = SKShapeNode(circleOfRadius: Self.circleRadius)
-        player.fillColor = .red
+        player.fillColor = .purple
         player.position = CGPoint(
             x: Self.size.width / 4,
             y: Self.size.height / 2
@@ -61,25 +62,25 @@ public class GameScene: SKScene {
             down: KeyCode.s
         )
 
-        return Player(node: player, keyMap: keyMap)
+        return Player(node: player, physicsType: .player1, keyMap: keyMap)
     }
 
     private func buildPlayer2() -> Player {
         let player = SKShapeNode(circleOfRadius: Self.circleRadius)
-        player.fillColor = .blue
+        player.fillColor = .orange
         player.position = CGPoint(
             x: 3 * Self.size.width / 4,
             y: Self.size.height / 2
         )
 
         let keyMap = KeyMap(
-            right: KeyCode.rightArrow,
-            left: KeyCode.leftArrow,
-            up: KeyCode.upArrow,
-            down: KeyCode.downArrow
+            right: KeyCode.l,
+            left: KeyCode.j,
+            up: KeyCode.i,
+            down: KeyCode.k
         )
 
-        return Player(node: player, keyMap: keyMap)
+        return Player(node: player, physicsType: .player2, keyMap: keyMap)
     }
 
     private func buildFloor() -> GKEntity {
@@ -158,5 +159,15 @@ public class GameScene: SKScene {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension GameScene: SKPhysicsContactDelegate {
+    public func didBegin(_ contact: SKPhysicsContact) {
+        playersMovementControl.forEach { $0.didBegin(contact: contact) }
+    }
+
+    public func didEnd(_ contact: SKPhysicsContact) {
+        playersMovementControl.forEach { $0.didEnd(contact: contact) }
     }
 }

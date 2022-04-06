@@ -2,18 +2,21 @@ import GameplayKit
 
 class Player: GKEntity {
 
-    init(node: SKShapeNode, keyMap: KeyMap) {
+    init(node: SKShapeNode, physicsType: PhysicsType, keyMap: KeyMap) {
         super.init()
-        addPhysicsBody(node: node)
+        addPhysicsBody(node: node, physicsType: physicsType)
         addComponent(GeometryComponent(node: node))
         addComponent(ObjectMovementComponent())
+        addComponent(JumpComponent())
         addComponent(MovementControlComponent(keyMap: keyMap))
     }
 
-    private func addPhysicsBody(node: SKShapeNode) {
+    private func addPhysicsBody(node: SKShapeNode, physicsType: PhysicsType) {
         node.physicsBody = SKPhysicsBody(polygonFrom: node.path!)
-        node.physicsBody?.categoryBitMask = PhysicsType.player.rawValue
+        node.physicsBody?.categoryBitMask = physicsType.rawValue
         node.physicsBody?.collisionBitMask = PhysicsType.floor.rawValue
+        node.physicsBody?.contactTestBitMask = PhysicsType.floor.rawValue
+        node.physicsBody?.restitution = 0
     }
 
     required init?(coder: NSCoder) {

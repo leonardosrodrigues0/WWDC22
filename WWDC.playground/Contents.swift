@@ -2,8 +2,8 @@ import PlaygroundSupport
 import SpriteKit
 
 let sceneView = SKView(frame: CGRect(
-    x:0,
-    y:0,
+    x: 0,
+    y: 0,
     width: 640,
     height: 480
 ))
