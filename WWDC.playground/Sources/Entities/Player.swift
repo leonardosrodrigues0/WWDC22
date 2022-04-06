@@ -2,17 +2,12 @@ import GameplayKit
 
 class Player: GKEntity {
 
-    init(node: SKShapeNode) {
+    init(node: SKShapeNode, keyMap: KeyMap) {
         super.init()
         addPhysicsBody(node: node)
         addComponent(GeometryComponent(node: node))
         addComponent(ObjectMovementComponent())
-        addComponent(MovementControlComponent(
-            right: KeyCode.d,
-            left: KeyCode.a,
-            down: KeyCode.s,
-            up: KeyCode.w
-        ))
+        addComponent(MovementControlComponent(keyMap: keyMap))
     }
 
     private func addPhysicsBody(node: SKShapeNode) {

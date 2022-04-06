@@ -12,9 +12,6 @@ public class GameScene: SKScene {
     var entities = [GKEntity]()
     private var lastUpdateTime: TimeInterval = 0
 
-    private var player: Player?
-//    private var player2: Player?
-
     public override init() {
         super.init(size: Self.size)
     }
@@ -22,9 +19,11 @@ public class GameScene: SKScene {
     public override func sceneDidLoad() {
         self.lastUpdateTime = 0
 
-        let player = buildPlayer()
-        self.player = player
-        addEntity(player)
+        let player1 = buildPlayer1()
+        addEntity(player1)
+
+        let player2 = buildPlayer2()
+        addEntity(player2)
 
         let floor = buildFloor()
         addEntity(floor)
@@ -47,7 +46,7 @@ public class GameScene: SKScene {
         }
     }
 
-    private func buildPlayer() -> Player {
+    private func buildPlayer1() -> Player {
         let player = SKShapeNode(circleOfRadius: Self.circleRadius)
         player.fillColor = .red
         player.position = CGPoint(
@@ -55,7 +54,32 @@ public class GameScene: SKScene {
             y: Self.size.height / 2
         )
 
-        return Player(node: player)
+        let keyMap = KeyMap(
+            right: KeyCode.d,
+            left: KeyCode.a,
+            up: KeyCode.w,
+            down: KeyCode.s
+        )
+
+        return Player(node: player, keyMap: keyMap)
+    }
+
+    private func buildPlayer2() -> Player {
+        let player = SKShapeNode(circleOfRadius: Self.circleRadius)
+        player.fillColor = .blue
+        player.position = CGPoint(
+            x: 3 * Self.size.width / 4,
+            y: Self.size.height / 2
+        )
+
+        let keyMap = KeyMap(
+            right: KeyCode.rightArrow,
+            left: KeyCode.leftArrow,
+            up: KeyCode.upArrow,
+            down: KeyCode.downArrow
+        )
+
+        return Player(node: player, keyMap: keyMap)
     }
 
     private func buildFloor() -> GKEntity {

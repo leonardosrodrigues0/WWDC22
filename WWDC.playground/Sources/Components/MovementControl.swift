@@ -1,29 +1,30 @@
 import GameplayKit
 
+public struct KeyMap {
+    let right: UInt16
+    let left: UInt16
+    let up: UInt16
+    let down: UInt16
+}
+
 public class MovementControlComponent: GKComponent {
 
     private var movementComponent: ObjectMovementComponent {
         return entity!.component(ofType: ObjectMovementComponent.self)!
     }
 
-    private let rightCode: UInt16
-    private let leftCode: UInt16
-    private let downCode: UInt16
-    private let upCode: UInt16
+    let keyMap: KeyMap
 
-    public init(right: UInt16, left: UInt16, down: UInt16, up: UInt16) {
-        self.rightCode = right
-        self.leftCode = left
-        self.downCode = down
-        self.upCode = up
+    public init(keyMap: KeyMap) {
+        self.keyMap = keyMap
         super.init()
     }
 
     public func keyDown(with event: NSEvent) {
         switch event.keyCode {
-        case rightCode:
+        case keyMap.right:
             movementComponent.state = .moving(.right)
-        case leftCode:
+        case keyMap.left:
             movementComponent.state = .moving(.left)
         default:
             return
@@ -32,9 +33,9 @@ public class MovementControlComponent: GKComponent {
 
     public func keyUp(with event: NSEvent) {
         switch event.keyCode {
-        case rightCode:
+        case keyMap.right:
             handleKeyUp(direction: .right)
-        case leftCode:
+        case keyMap.left:
             handleKeyUp(direction: .left)
         default:
             return
