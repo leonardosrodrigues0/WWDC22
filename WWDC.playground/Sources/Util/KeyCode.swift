@@ -1,4 +1,4 @@
-enum KeyCode {
+public enum KeyCode {
 
     // Layout-independent Keys
     // eg.These key codes are always the same key on all layouts.

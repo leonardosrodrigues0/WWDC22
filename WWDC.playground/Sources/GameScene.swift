@@ -8,10 +8,12 @@ public class GameScene: SKScene {
     static let circleRadius: CGFloat = 20
     static let netHeight: CGFloat = 300
     static let floorHeight: CGFloat = 40
-    static let velocityFactor: CGFloat = 3
 
+    var entities = [GKEntity]()
     private var lastUpdateTime: TimeInterval = 0
-    private var circleNode: SKShapeNode?
+
+    private var player: Player?
+//    private var player2: Player?
 
     public override init() {
         super.init(size: Self.size)
@@ -20,29 +22,43 @@ public class GameScene: SKScene {
     public override func sceneDidLoad() {
         self.lastUpdateTime = 0
 
-        let circle = buildCircle()
-        self.circleNode = circle
-        addChild(circle)
+        let player = buildPlayer()
+        self.player = player
+        addEntity(player)
 
         let floor = buildFloor()
-        addChild(floor)
+        addEntity(floor)
 
-        let net = buildNet()
-        addChild(net)
+        let platform = buildPlatform()
+        addEntity(platform)
 
         let leftWall = buildWall(x: -1)
-        addChild(leftWall)
+        addEntity(leftWall)
 
         let rightWall = buildWall(x: Self.size.width + 1)
-        addChild(rightWall)
+        addEntity(rightWall)
     }
 
-    private func buildCircle() -> SKShapeNode {
-        let player = Player()
-        return player.node
+    private func addEntity(_ entity: GKEntity) {
+        entities.append(entity)
+
+        if let geometry = entity.component(ofType: GeometryComponent.self) {
+            addChild(geometry.node)
+        }
     }
 
-    private func buildFloor() -> SKShapeNode {
+    private func buildPlayer() -> Player {
+        let player = SKShapeNode(circleOfRadius: Self.circleRadius)
+        player.fillColor = .red
+        player.position = CGPoint(
+            x: Self.size.width / 4,
+            y: Self.size.height / 2
+        )
+
+        return Player(node: player)
+    }
+
+    private func buildFloor() -> GKEntity {
         let floorSize = CGSize(width: Self.size.width, height: Self.floorHeight)
         let floor = SKShapeNode(rectOf: floorSize)
 
@@ -52,13 +68,23 @@ public class GameScene: SKScene {
             y: floorSize.height / 2
         )
 
-        floor.physicsBody = SKPhysicsBody(rectangleOf: floorSize)
-        floor.physicsBody?.isDynamic = false
-        floor.physicsBody?.categoryBitMask = PhysicsType.floor.rawValue
-        return floor
+        return StaticObject(node: floor, category: .floor)
     }
 
-    private func buildNet() -> SKShapeNode {
+    private func buildPlatform() -> GKEntity {
+        let platformSize = CGSize(width: Self.size.width / 4, height: Self.floorHeight)
+        let platform = SKShapeNode(rectOf: platformSize)
+
+        platform.fillColor = .blue
+        platform.position = CGPoint(
+            x: Self.size.width / 2,
+            y: Self.size.height / 4
+        )
+
+        return StaticObject(node: platform, category: .floor)
+    }
+
+    private func buildNet() -> GKEntity {
         let netSize = CGSize(width: Self.circleRadius / 2, height: Self.netHeight)
         let net = SKShapeNode(rectOf: netSize)
 
@@ -68,33 +94,42 @@ public class GameScene: SKScene {
             y: Self.floorHeight + Self.netHeight / 2
         )
 
-        net.physicsBody = SKPhysicsBody(rectangleOf: netSize)
-        net.physicsBody?.isDynamic = false
-        net.physicsBody?.categoryBitMask = PhysicsType.floor.rawValue
-        return net
+        return StaticObject(node: net, category: .floor)
     }
 
-    private func buildWall(x: CGFloat) -> SKShapeNode {
-        let wallSize = CGSize(width: 1, height: 20 * Self.size.height)
+    private func buildWall(x: CGFloat) -> GKEntity {
+        let wallSize = CGSize(width: 20, height: 20 * Self.size.height)
         let wall = SKShapeNode(rectOf: wallSize)
 
         wall.position = CGPoint(x: x, y: Self.size.height / 2)
-        wall.physicsBody = SKPhysicsBody(rectangleOf: wallSize)
-        wall.physicsBody?.isDynamic = false
-        wall.physicsBody?.categoryBitMask = PhysicsType.floor.rawValue
-        return wall
+
+        return StaticObject(node: wall, category: .floor)
+    }
+
+    private var playersMovementControl: [MovementControlComponent] {
+        let players = entities.compactMap { $0 as? Player }
+        return players.map { $0.component(ofType: MovementControlComponent.self)! }
     }
 
     public override func keyDown(with event: NSEvent) {
-        if event.keyCode == KeyCode.w {
-            print("DOWN")
-        }
+        playersMovementControl.forEach { $0.keyDown(with: event) }
     }
 
     public override func keyUp(with event: NSEvent) {
-        if event.keyCode == KeyCode.w {
-            print("UP")
+        playersMovementControl.forEach { $0.keyUp(with: event) }
+    }
+
+    public override func update(_ currentTime: TimeInterval) {
+        if (self.lastUpdateTime == 0) {
+            self.lastUpdateTime = currentTime
         }
+
+        let deltaTime = currentTime - self.lastUpdateTime
+        for entity in self.entities {
+            entity.update(deltaTime: deltaTime)
+        }
+
+        self.lastUpdateTime = currentTime
     }
 
     required init?(coder aDecoder: NSCoder) {
