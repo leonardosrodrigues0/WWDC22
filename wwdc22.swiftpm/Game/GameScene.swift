@@ -3,14 +3,13 @@ import GameplayKit
 
 class GameScene: SKScene {
 
-    static let circleRadius: CGFloat = 30
     static let wallsThickness: CGFloat = 40
 
     let height: CGFloat = 900
     let width: CGFloat
 
     private var entities = [GKEntity]()
-    private var balls = [UITouch: Player]()
+    private var fieldManager: FieldManager?
     private var lastUpdateTime: TimeInterval = 0
 
     override init() {
@@ -24,19 +23,27 @@ class GameScene: SKScene {
         self.physicsWorld.gravity = CGVector.zero
     }
 
+    override func didMove(to view: SKView) {
+        view.isMultipleTouchEnabled = true
+    }
+
     override func sceneDidLoad() {
         self.lastUpdateTime = 0
 
         let platform = buildPlatform()
         addEntity(platform)
 
-        let player = buildPlayer()
-        addEntity(player)
+        let ally = buildAlly()
+        addEntity(ally)
+
+        let fieldManager = FieldManager(scene: self)
+        self.fieldManager = fieldManager
+        addEntity(fieldManager)
     }
 
     // MARK: - Manage Entities
 
-    private func addEntity(_ entity: GKEntity) {
+    func addEntity(_ entity: GKEntity) {
         entities.append(entity)
 
         if let geometry = entity.component(ofType: GeometryComponent.self) {
@@ -44,7 +51,7 @@ class GameScene: SKScene {
         }
     }
 
-    private func removeEntity(_ entity: GKEntity) {
+    func removeEntity(_ entity: GKEntity) {
         entities.removeAll { $0 == entity }
 
         if let geometry = entity.component(ofType: GeometryComponent.self) {
@@ -54,15 +61,11 @@ class GameScene: SKScene {
 
     // MARK: - Build Entities
 
-    private func buildPlayer() -> Player {
-        let player = SKShapeNode(circleOfRadius: Self.circleRadius)
-        player.fillColor = .red
-        player.position = CGPoint(
+    private func buildAlly() -> Ally {
+        return Ally(position: CGPoint(
             x: width / 4,
             y: height / 2
-        )
-
-        return Player(node: player)
+        ))
     }
 
     private func buildPlatform() -> GKEntity {
@@ -81,29 +84,19 @@ class GameScene: SKScene {
     // MARK: - Manage Touches
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for touch in touches {
-            let player = buildPlayer()
-            player.component(ofType: GeometryComponent.self)?.node.position = touch.location(in: self)
-            balls[touch] = player
-            addEntity(player)
-        }
+        fieldManager?.touchesBegan(touches, with: event)
     }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for touch in touches {
-            if let player = balls[touch] {
-                removeEntity(player)
-                balls.removeValue(forKey: touch)
-            }
-        }
+        fieldManager?.touchesEnded(touches, with: event)
     }
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for touch in touches {
-            if let player = balls[touch] {
-                player.component(ofType: GeometryComponent.self)?.node.position = touch.location(in: self)
-            }
-        }
+        fieldManager?.touchesMoved(touches, with: event)
+    }
+
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        fieldManager?.touchesEnded(touches, with: event)
     }
 
     override func update(_ currentTime: TimeInterval) {
