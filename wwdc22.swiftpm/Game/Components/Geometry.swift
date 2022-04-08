@@ -1,10 +1,10 @@
 import GameplayKit
 
-public class GeometryComponent: GKComponent {
+class GeometryComponent: GKComponent {
 
-    public let node: SKNode
+    let node: SKNode
 
-    public init(node: SKNode) {
+    init(node: SKNode) {
         self.node = node
         super.init()
     }

@@ -2,17 +2,16 @@ import GameplayKit
 
 class StaticObject: GKEntity {
 
-    init(node: SKShapeNode, category: PhysicsType) {
+    init(node: SKShapeNode) {
         super.init()
-        addPhysicsBody(node: node, category: category)
+        addPhysicsBody(node: node)
         addComponent(GeometryComponent(node: node))
     }
 
-    private func addPhysicsBody(node: SKShapeNode, category: PhysicsType) {
+    private func addPhysicsBody(node: SKShapeNode) {
         node.physicsBody = SKPhysicsBody(polygonFrom: node.path!)
         node.physicsBody?.isDynamic = false
-        node.physicsBody?.categoryBitMask = category.rawValue
-        node.physicsBody?.restitution = 0
+        node.physicsBody?.categoryBitMask = PhysicsType.wall.rawValue
     }
 
     required init?(coder: NSCoder) {
