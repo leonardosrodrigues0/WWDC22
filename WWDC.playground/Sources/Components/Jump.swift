@@ -22,6 +22,7 @@ class JumpComponent: GKComponent {
     }
 
     private func jump() {
+        print("JUMP")
         physicsBody.velocity.dy = 0
         physicsBody.applyImpulse(CGVector(dx: 0, dy: Self.jumpImpulse))
         canJump = false

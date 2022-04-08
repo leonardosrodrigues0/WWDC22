@@ -14,9 +14,10 @@ class Player: GKEntity {
     private func addPhysicsBody(node: SKShapeNode, physicsType: PhysicsType) {
         node.physicsBody = SKPhysicsBody(polygonFrom: node.path!)
         node.physicsBody?.categoryBitMask = physicsType.rawValue
-        node.physicsBody?.collisionBitMask = PhysicsType.floor.rawValue
+        node.physicsBody?.collisionBitMask = PhysicsType.floor.rawValue | PhysicsType.player1.rawValue | PhysicsType.player2.rawValue
         node.physicsBody?.contactTestBitMask = PhysicsType.floor.rawValue
         node.physicsBody?.restitution = 0
+        node.physicsBody?.mass = 100
     }
 
     required init?(coder: NSCoder) {

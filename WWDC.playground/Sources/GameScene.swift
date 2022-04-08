@@ -5,7 +5,7 @@ import AppKit
 public class GameScene: SKScene {
 
     static let size = CGSize(width: 1800, height: 900)
-    static let circleRadius: CGFloat = 20
+    static let circleRadius: CGFloat = 30
     static let netHeight: CGFloat = 300
     static let floorHeight: CGFloat = 40
 
@@ -48,7 +48,8 @@ public class GameScene: SKScene {
     }
 
     private func buildPlayer1() -> Player {
-        let player = SKShapeNode(circleOfRadius: Self.circleRadius)
+        let player = SKShapeNode(rectOf: CGSize(width: Self.circleRadius, height: Self.circleRadius))
+//        let player = SKShapeNode(circleOfRadius: Self.circleRadius)
         player.fillColor = .purple
         player.position = CGPoint(
             x: Self.size.width / 4,
