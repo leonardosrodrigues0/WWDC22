@@ -16,12 +16,17 @@ class GameScene: SKScene {
         let proportion = UIScreen.main.bounds.width / UIScreen.main.bounds.height
         width = height * (proportion > 1 ? proportion : 1 / proportion)
         super.init(size: CGSize(width: width, height: height))
+        physicsWorld.gravity = CGVector.zero
+        physicsWorld.contactDelegate = self
+        addBorder()
+    }
+
+    private func addBorder() {
         let border = SKPhysicsBody(edgeLoopFrom: self.frame)
         border.friction = 0
         border.restitution = 1
         self.physicsBody = border
-        self.physicsBody?.categoryBitMask = PhysicsType.border.rawValue
-        self.physicsWorld.gravity = CGVector.zero
+        self.physicsBody?.categoryBitMask = PhysicsType.allowedWall.rawValue
     }
 
     override func didMove(to view: SKView) {
@@ -31,11 +36,14 @@ class GameScene: SKScene {
     override func sceneDidLoad() {
         self.lastUpdateTime = 0
 
-        let platform = buildPlatform()
-        addEntity(platform)
-
         let ally = buildAlly()
         addEntity(ally)
+
+        let goal = buildGoal()
+        addEntity(goal)
+
+        let platform = buildPlatform()
+        addEntity(platform)
 
         let fieldManager = FieldManager(scene: self)
         self.fieldManager = fieldManager
@@ -69,17 +77,24 @@ class GameScene: SKScene {
         ))
     }
 
-    private func buildPlatform() -> GKEntity {
-        let platformSize = CGSize(width: width / 4, height: Self.wallsThickness)
-        let platform = SKShapeNode(rectOf: platformSize)
+    private func buildGoal() -> Goal {
+        return Goal(position: CGPoint(
+            x: 3 * width / 4,
+            y: height / 2
+        ))
+    }
 
-        platform.fillColor = .blue
-        platform.position = CGPoint(
-            x: width / 2,
-            y: height / 4
-        )
-
-        return StaticObject(node: platform)
+    private func buildPlatform() -> NotAllowedWall {
+        return NotAllowedWall(rect: CGRect(
+            center: CGPoint(
+                x: width / 2,
+                y: height / 4
+            ),
+            size: CGSize(
+                width: width / 4,
+                height: Self.wallsThickness
+            )
+        ))
     }
 
     // MARK: - Manage Touches
@@ -115,5 +130,19 @@ class GameScene: SKScene {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension GameScene: SKPhysicsContactDelegate {
+    func didBegin(_ contact: SKPhysicsContact) {
+        let contactMask = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
+
+        if contactMask == PhysicsType.finishMask {
+            print("Nice!")
+            self.backgroundColor = .darkGray
+        } else if contactMask == PhysicsType.deathMask {
+            print("Bad!")
+            self.backgroundColor = .black
+        }
     }
 }

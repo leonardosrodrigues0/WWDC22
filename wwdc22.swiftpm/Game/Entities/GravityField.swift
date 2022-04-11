@@ -21,7 +21,8 @@ class GravityField: GKEntity {
 
     private func buildSpriteNode() -> SKNode {
         let node = SKShapeNode(circleOfRadius: CGFloat(Self.minimumRadius))
-        node.fillColor = .green
+        node.fillColor = .purple
+        node.strokeColor = .clear
         return node
     }
 

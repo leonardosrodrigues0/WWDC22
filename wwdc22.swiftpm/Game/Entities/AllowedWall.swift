@@ -1,9 +1,12 @@
 import GameplayKit
 
-class StaticObject: GKEntity {
+class AllowedWall: GKEntity {
 
-    init(node: SKShapeNode) {
+    init(rect: CGRect) {
         super.init()
+        let node = SKShapeNode(rect: rect)
+        node.fillColor = .blue
+        node.strokeColor = .clear
         addPhysicsBody(node: node)
         addComponent(GeometryComponent(node: node))
     }
@@ -11,7 +14,7 @@ class StaticObject: GKEntity {
     private func addPhysicsBody(node: SKShapeNode) {
         node.physicsBody = SKPhysicsBody(polygonFrom: node.path!)
         node.physicsBody?.isDynamic = false
-        node.physicsBody?.categoryBitMask = PhysicsType.wall.rawValue
+        node.physicsBody?.categoryBitMask = PhysicsType.allowedWall.rawValue
         node.physicsBody?.restitution = 1
     }
 

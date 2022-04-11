@@ -1,13 +1,13 @@
 import GameplayKit
 
-class Ally: GKEntity {
+class Goal: GKEntity {
 
     private static let size: CGFloat = 60
-
+    
     init(position: CGPoint) {
         super.init()
         let node = SKShapeNode(circleOfRadius: Self.size / 2)
-        node.fillColor = .white
+        node.fillColor = .green
         node.strokeColor = .clear
         node.position = position
         addPhysicsBody(node: node)
@@ -16,10 +16,9 @@ class Ally: GKEntity {
 
     private func addPhysicsBody(node: SKShapeNode) {
         node.physicsBody = SKPhysicsBody(polygonFrom: node.path!)
-        node.physicsBody?.categoryBitMask = PhysicsType.ally.rawValue
-        node.physicsBody?.collisionBitMask = PhysicsType.allowedWall.rawValue | PhysicsType.notAllowedWall.rawValue 
-        node.physicsBody?.restitution = 1
-        node.physicsBody?.linearDamping = 0
+        node.physicsBody?.isDynamic = false
+        node.physicsBody?.categoryBitMask = PhysicsType.goal.rawValue
+        node.physicsBody?.contactTestBitMask = PhysicsType.ally.rawValue
     }
 
     required init?(coder: NSCoder) {
