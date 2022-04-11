@@ -15,7 +15,6 @@ class NotAllowedWall: GKEntity {
         node.physicsBody = SKPhysicsBody(polygonFrom: node.path!)
         node.physicsBody?.isDynamic = false
         node.physicsBody?.categoryBitMask = PhysicsType.notAllowedWall.rawValue
-        node.physicsBody?.contactTestBitMask = PhysicsType.ally.rawValue
     }
 
     required init?(coder: NSCoder) {

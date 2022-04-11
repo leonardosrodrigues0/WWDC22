@@ -3,8 +3,6 @@ import GameplayKit
 
 class GameScene: SKScene {
 
-    static let wallsThickness: CGFloat = 40
-
     let height: CGFloat = 900
     let width: CGFloat
 
@@ -12,9 +10,13 @@ class GameScene: SKScene {
     private var fieldManager: FieldManager?
     private var lastUpdateTime: TimeInterval = 0
 
+    private let levels: [Level]
+    private var levelIndex = 0
+
     override init() {
         let proportion = UIScreen.main.bounds.width / UIScreen.main.bounds.height
         width = height * (proportion > 1 ? proportion : 1 / proportion)
+        levels = Level.buildLevels(width: width, height: height)
         super.init(size: CGSize(width: width, height: height))
         physicsWorld.gravity = CGVector.zero
         physicsWorld.contactDelegate = self
@@ -26,31 +28,46 @@ class GameScene: SKScene {
         border.friction = 0
         border.restitution = 1
         self.physicsBody = border
-        self.physicsBody?.categoryBitMask = PhysicsType.allowedWall.rawValue
-    }
-
-    override func didMove(to view: SKView) {
-        view.isMultipleTouchEnabled = true
+        self.physicsBody?.categoryBitMask = PhysicsType.notAllowedWall.rawValue
     }
 
     override func sceneDidLoad() {
+        loadCurrentLevel()
+    }
+
+    private func loadCurrentLevel() {
+        removeAllEntities()
+        basicConfig()
+        addLevelLabel()
+        addEntities(levels[levelIndex].builder())
+    }
+
+    private func addLevelLabel() {
+        let label = GameLabel("Level \(levelIndex + 1)", position: CGPoint(
+            x: 0.1 * width,
+            y: 0.9 * height
+        ))
+
+        addEntity(label)
+    }
+
+    private func basicConfig() {
         self.lastUpdateTime = 0
-
-        let ally = buildAlly()
-        addEntity(ally)
-
-        let goal = buildGoal()
-        addEntity(goal)
-
-        let platform = buildPlatform()
-        addEntity(platform)
 
         let fieldManager = FieldManager(scene: self)
         self.fieldManager = fieldManager
         addEntity(fieldManager)
     }
 
+    override func didMove(to view: SKView) {
+        view.isMultipleTouchEnabled = true
+    }
+
     // MARK: - Manage Entities
+
+    func addEntities(_ entities: [GKEntity]) {
+        entities.forEach { addEntity($0) }
+    }
 
     func addEntity(_ entity: GKEntity) {
         entities.append(entity)
@@ -60,41 +77,20 @@ class GameScene: SKScene {
         }
     }
 
+    func removeAllEntities() {
+        entities.forEach { removeEntity($0) }
+    }
+
+    func removeEntities(_ entities: [GKEntity]) {
+        entities.forEach { removeEntity($0) }
+    }
+
     func removeEntity(_ entity: GKEntity) {
         entities.removeAll { $0 == entity }
 
         if let geometry = entity.component(ofType: GeometryComponent.self) {
             geometry.node.removeFromParent()
         }
-    }
-
-    // MARK: - Build Entities
-
-    private func buildAlly() -> Ally {
-        return Ally(position: CGPoint(
-            x: width / 4,
-            y: height / 2
-        ))
-    }
-
-    private func buildGoal() -> Goal {
-        return Goal(position: CGPoint(
-            x: 3 * width / 4,
-            y: height / 2
-        ))
-    }
-
-    private func buildPlatform() -> NotAllowedWall {
-        return NotAllowedWall(rect: CGRect(
-            center: CGPoint(
-                x: width / 2,
-                y: height / 4
-            ),
-            size: CGSize(
-                width: width / 4,
-                height: Self.wallsThickness
-            )
-        ))
     }
 
     // MARK: - Manage Touches
@@ -136,13 +132,16 @@ class GameScene: SKScene {
 extension GameScene: SKPhysicsContactDelegate {
     func didBegin(_ contact: SKPhysicsContact) {
         let contactMask = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
-
         if contactMask == PhysicsType.finishMask {
-            print("Nice!")
-            self.backgroundColor = .darkGray
+            if levelIndex < levels.count - 1 {
+                levelIndex += 1
+            } else {
+                levelIndex = 0
+            }
+
+            loadCurrentLevel()
         } else if contactMask == PhysicsType.deathMask {
-            print("Bad!")
-            self.backgroundColor = .black
+            loadCurrentLevel()
         }
     }
 }

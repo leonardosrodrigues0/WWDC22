@@ -3,7 +3,7 @@ import GameplayKit
 class FieldManager: GKEntity {
 
     private var fields: [UITouch: GravityField]
-    let scene: GameScene
+    weak var scene: GameScene!
 
     init(scene: GameScene) {
         self.scene = scene

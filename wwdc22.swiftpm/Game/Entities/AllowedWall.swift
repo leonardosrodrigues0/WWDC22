@@ -15,6 +15,7 @@ class AllowedWall: GKEntity {
         node.physicsBody = SKPhysicsBody(polygonFrom: node.path!)
         node.physicsBody?.isDynamic = false
         node.physicsBody?.categoryBitMask = PhysicsType.allowedWall.rawValue
+        node.physicsBody?.friction = 0
         node.physicsBody?.restitution = 1
     }
 

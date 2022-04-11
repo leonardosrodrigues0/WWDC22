@@ -18,7 +18,6 @@ class Goal: GKEntity {
         node.physicsBody = SKPhysicsBody(polygonFrom: node.path!)
         node.physicsBody?.isDynamic = false
         node.physicsBody?.categoryBitMask = PhysicsType.goal.rawValue
-        node.physicsBody?.contactTestBitMask = PhysicsType.ally.rawValue
     }
 
     required init?(coder: NSCoder) {

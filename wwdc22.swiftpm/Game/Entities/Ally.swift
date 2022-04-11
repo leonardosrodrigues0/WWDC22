@@ -17,7 +17,8 @@ class Ally: GKEntity {
     private func addPhysicsBody(node: SKShapeNode) {
         node.physicsBody = SKPhysicsBody(polygonFrom: node.path!)
         node.physicsBody?.categoryBitMask = PhysicsType.ally.rawValue
-        node.physicsBody?.collisionBitMask = PhysicsType.allowedWall.rawValue | PhysicsType.notAllowedWall.rawValue 
+        node.physicsBody?.collisionBitMask = PhysicsType.allowedWall.rawValue | PhysicsType.notAllowedWall.rawValue
+        node.physicsBody?.contactTestBitMask = PhysicsType.notAllowedWall.rawValue | PhysicsType.goal.rawValue
         node.physicsBody?.restitution = 1
         node.physicsBody?.linearDamping = 0
     }
