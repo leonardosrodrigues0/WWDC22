@@ -3,8 +3,8 @@ import GameplayKit
 class Wall: GKEntity {
 
     var baseThickness: CGFloat { 40 }
-    var physicsType: PhysicsType { .allowedWall }
-    var color: UIColor { .blue }
+    var physicsType: PhysicsType { .notAllowedWall }
+    var color: UIColor { .red }
 
     init(_ pointA: CGPoint, _ pointB: CGPoint) {
         super.init()
