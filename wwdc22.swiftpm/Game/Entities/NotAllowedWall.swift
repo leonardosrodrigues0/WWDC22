@@ -1,23 +1,8 @@
 import GameplayKit
 
-class NotAllowedWall: GKEntity {
+class NotAllowedWall: Wall {
 
-    init(rect: CGRect) {
-        super.init()
-        let node = SKShapeNode(rect: rect)
-        node.fillColor = .red
-        node.strokeColor = .clear
-        addPhysicsBody(node: node)
-        addComponent(GeometryComponent(node: node))
-    }
+    override var color: UIColor { .red }
+    override var physicsType: PhysicsType { .notAllowedWall }
 
-    private func addPhysicsBody(node: SKShapeNode) {
-        node.physicsBody = SKPhysicsBody(polygonFrom: node.path!)
-        node.physicsBody?.isDynamic = false
-        node.physicsBody?.categoryBitMask = PhysicsType.notAllowedWall.rawValue
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
 }

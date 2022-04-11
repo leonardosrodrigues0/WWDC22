@@ -86,25 +86,12 @@ extension Level {
                         x: 3 * width / 4,
                         y: height / 2
                     )),
-                    NotAllowedWall(rect: CGRect(
-                        center: CGPoint(
-                            x: 2 * width / 5,
-                            y: 3 * height / 4
-                        ),
-                        size: CGSize(
-                            width: baseWallThickness,
-                            height: height / 2
-                        )
-                    )),
-                    NotAllowedWall(rect: CGRect(
-                        center: CGPoint(
-                            x: width / 2,
-                            y: height / 2
-                        ),
-                        size: CGSize(
-                            width: width / 5,
-                            height: baseWallThickness
-                        )
+                    NotAllowedWall(CGPoint(
+                        x: width / 2,
+                        y: 3 * height / 4
+                    ), CGPoint(
+                        x: 2 * width / 3,
+                        y: height / 2
                     ))
                 ]
             }
