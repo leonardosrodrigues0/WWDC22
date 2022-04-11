@@ -13,7 +13,8 @@ class GameScene: SKScene {
     private var lastUpdateTime: TimeInterval = 0
 
     override init() {
-        width = height * UIScreen.main.bounds.width / UIScreen.main.bounds.height
+        let proportion = UIScreen.main.bounds.width / UIScreen.main.bounds.height
+        width = height * (proportion > 1 ? proportion : 1 / proportion)
         super.init(size: CGSize(width: width, height: height))
         let border = SKPhysicsBody(edgeLoopFrom: self.frame)
         border.friction = 0

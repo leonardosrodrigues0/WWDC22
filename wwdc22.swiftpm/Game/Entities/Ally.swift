@@ -17,6 +17,7 @@ class Ally: GKEntity {
         node.physicsBody = SKPhysicsBody(polygonFrom: node.path!)
         node.physicsBody?.categoryBitMask = PhysicsType.ally.rawValue
         node.physicsBody?.collisionBitMask = PhysicsType.wall.rawValue | PhysicsType.border.rawValue
+        node.physicsBody?.restitution = 1
     }
 
     required init?(coder: NSCoder) {

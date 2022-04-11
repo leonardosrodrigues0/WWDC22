@@ -2,6 +2,7 @@ import SwiftUI
 import SpriteKit
 
 struct ContentView: View {
+
     let scene: GameScene = {
         let scene = GameScene()
         scene.scaleMode = .aspectFit
@@ -9,7 +10,7 @@ struct ContentView: View {
     }()
 
     var body: some View {
-        SpriteView(scene: scene)
+        SpriteView(scene: scene, debugOptions: [.showsFields])
             .ignoresSafeArea()
     }
 }
