@@ -1,6 +1,6 @@
 import GameplayKit
 
-class GeometryComponent: GKComponent {
+class GeometryComponent: GKComponent, NodeComponent {
 
     let node: SKNode
 

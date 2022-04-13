@@ -2,29 +2,41 @@ import SpriteKit
 import GameplayKit
 
 struct Level {
-    let builder: () -> [GKEntity]
+    init(_ build: @autoclosure @escaping () -> [GKEntity]) {
+        self.build = build
+    }
+
+    let build: () -> [GKEntity]
 }
 
 extension Level {
     static var baseWallThickness: CGFloat { 40 }
 
-    static func buildLevels(width: CGFloat, height: CGFloat) -> [Level] {
+    static func buildLevels(scene: GameScene) -> [Level] {
+        let height = scene.size.height
+        let width = scene.size.width
         return [
-            Level {
+            Level(
                 [
-                    Ally(position: CGPoint(
+                    FieldManager(scene: scene),
+                    Charge(position: CGPoint(
                         x: width / 4,
                         y: height / 2
                     )),
+                    Charge(position: CGPoint(
+                        x: width / 3,
+                        y: height / 2
+                    ), type: .charge2),
                     Goal(position: CGPoint(
                         x: 3 * width / 4,
                         y: height / 2
                     ))
                 ]
-            },
-            Level {
+            ),
+            Level(
                 [
-                    Ally(position: CGPoint(
+                    FieldManager(scene: scene),
+                    Charge(position: CGPoint(
                         x: width / 4,
                         y: height / 2
                     )),
@@ -40,10 +52,11 @@ extension Level {
                         y: height / 2
                     ))
                 ]
-            },
-            Level {
+            ),
+            Level(
                 [
-                    Ally(position: CGPoint(
+                    FieldManager(scene: scene),
+                    Charge(position: CGPoint(
                         x: width / 4,
                         y: height / 2
                     )),
@@ -66,47 +79,48 @@ extension Level {
                         y: height / 2
                     ))
                 ]
-            },
-            Level {
+            ),
+            Level(
                 [
-                    Ally(position: CGPoint(
+                    FieldManager(scene: scene),
+                    Charge(position: CGPoint(
                         x: width / 4,
                         y: height / 2
                     )),
                     Wall(CGPoint(
-                        x: 2 * width / 5,
+                        x: width / 3,
                         y: height
                     ), CGPoint(
-                        x: 2 * width / 5,
-                        y: height / 3
+                        x: width / 3,
+                        y: 2 * height / 5
                     )),
                     Wall(CGPoint(
-                        x: 2 * width / 5,
-                        y: height / 3
+                        x: width / 3,
+                        y: 2 * height / 5
                     ), CGPoint(
-                        x: 4 * width / 5,
-                        y: height / 3
+                        x: 2 * width / 3,
+                        y: 2 * height / 5
                     )),
                     Wall(CGPoint(
-                        x: 4 * width / 5,
-                        y: height / 3
+                        x: 2 * width / 3,
+                        y: 2 * height / 5
                     ), CGPoint(
-                        x: 4 * width / 5,
-                        y: 3 * height / 4
+                        x: 2 * width / 3,
+                        y: 2 * height / 3
                     )),
                     Wall(CGPoint(
-                        x: 4 * width / 5,
-                        y: 3 * height / 4
+                        x: 2 * width / 3,
+                        y: 2 * height / 3
                     ), CGPoint(
-                        x: 3 * width / 5,
-                        y: 3 * height / 4
+                        x: width / 2,
+                        y: 2 * height / 3
                     )),
                     Goal(position: CGPoint(
-                        x: 3 * width / 4,
-                        y: 6.5 * height / 12
+                        x: 3 * width / 5,
+                        y: 8 * height / 15
                     ))
                 ]
-            }
+            )
         ]
     }
 }

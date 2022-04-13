@@ -2,22 +2,22 @@ import GameplayKit
 
 class FieldManager: GKEntity {
 
-    private var fields: [UITouch: GravityField]
+    private var fields: [UITouch: Field]
+    private let convergent: Bool
     weak var scene: GameScene!
 
-    init(scene: GameScene) {
+    init(scene: GameScene, convergent: Bool = false) {
         self.scene = scene
+        self.convergent = convergent
         fields = [:]
         super.init()
     }
 
     func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
-            let field = GravityField()
+            let field = Field(convergent: convergent)
             fields[touch] = field
-            field.component(
-                ofType: GeometryComponent.self
-            )?.node.position = touch.location(in: scene)
+            field.updatePosition(touch.location(in: scene))
             scene.addEntity(field)
         }
     }
@@ -34,9 +34,7 @@ class FieldManager: GKEntity {
     func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
             if let field = fields[touch] {
-                field.component(
-                    ofType: GeometryComponent.self
-                )?.node.position = touch.location(in: scene)
+                field.updatePosition(touch.location(in: scene))
             }
         }
     }

@@ -7,16 +7,17 @@ class GameScene: SKScene {
     let width: CGFloat
 
     private var entities = [GKEntity]()
-    private var fieldManager: FieldManager?
     private var lastUpdateTime: TimeInterval = 0
 
-    private let levels: [Level]
+    private lazy var levels: [Level] = {
+        Level.buildLevels(scene: self)
+    }()
+
     private var levelIndex = 0
 
     override init() {
         let proportion = UIScreen.main.bounds.width / UIScreen.main.bounds.height
         width = height * (proportion > 1 ? proportion : 1 / proportion)
-        levels = Level.buildLevels(width: width, height: height)
         super.init(size: CGSize(width: width, height: height))
         physicsWorld.gravity = CGVector.zero
         physicsWorld.contactDelegate = self
@@ -37,9 +38,9 @@ class GameScene: SKScene {
 
     private func loadCurrentLevel() {
         removeAllEntities()
-        basicConfig()
+        lastUpdateTime = 0
         addLevelLabel()
-        addEntities(levels[levelIndex].builder())
+        addEntities(levels[levelIndex].build())
     }
 
     private func addLevelLabel() {
@@ -49,14 +50,6 @@ class GameScene: SKScene {
         ))
 
         addEntity(label)
-    }
-
-    private func basicConfig() {
-        self.lastUpdateTime = 0
-
-        let fieldManager = FieldManager(scene: self)
-        self.fieldManager = fieldManager
-        addEntity(fieldManager)
     }
 
     override func didMove(to view: SKView) {
@@ -71,14 +64,11 @@ class GameScene: SKScene {
 
     func addEntity(_ entity: GKEntity) {
         entities.append(entity)
-
-        if let geometry = entity.component(ofType: GeometryComponent.self) {
-            addChild(geometry.node)
-        }
+        entity.applyOnNodes(self.addChild(_:))
     }
 
     func removeAllEntities() {
-        entities.forEach { removeEntity($0) }
+        removeEntities(self.entities)
     }
 
     func removeEntities(_ entities: [GKEntity]) {
@@ -87,13 +77,15 @@ class GameScene: SKScene {
 
     func removeEntity(_ entity: GKEntity) {
         entities.removeAll { $0 == entity }
-
-        if let geometry = entity.component(ofType: GeometryComponent.self) {
-            geometry.node.removeFromParent()
-        }
+        entity.applyOnNodes { $0.removeFromParent() }
     }
 
     // MARK: - Manage Touches
+    private var fieldManager: FieldManager? {
+        entities.compactMap { entity in
+            entity as? FieldManager
+        }.first
+    }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         fieldManager?.touchesBegan(touches, with: event)
@@ -132,7 +124,11 @@ class GameScene: SKScene {
 extension GameScene: SKPhysicsContactDelegate {
     func didBegin(_ contact: SKPhysicsContact) {
         let contactMask = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
-        if contactMask == PhysicsType.finishMask {
+        guard contactMask & PhysicsType.chargesMask != 0 else {
+            return
+        }
+
+        if contactMask & PhysicsType.goal.rawValue != 0 {
             if levelIndex < levels.count - 1 {
                 levelIndex += 1
             } else {
@@ -140,7 +136,7 @@ extension GameScene: SKPhysicsContactDelegate {
             }
 
             loadCurrentLevel()
-        } else if contactMask == PhysicsType.deathMask {
+        } else if contactMask & PhysicsType.notAllowedWall.rawValue != 0 {
             loadCurrentLevel()
         }
     }
