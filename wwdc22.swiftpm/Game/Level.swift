@@ -23,10 +23,6 @@ extension Level {
                         x: width / 4,
                         y: height / 2
                     )),
-                    Charge(position: CGPoint(
-                        x: width / 3,
-                        y: height / 2
-                    ), type: .charge2),
                     Goal(position: CGPoint(
                         x: 3 * width / 4,
                         y: height / 2
