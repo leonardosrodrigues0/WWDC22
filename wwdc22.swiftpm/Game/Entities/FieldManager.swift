@@ -11,7 +11,19 @@ class FieldManager: GKEntity {
         self.convergent = convergent
         fields = [:]
         super.init()
+        let labelNode = buildLabelNode()
+        addComponent(GeometryComponent(node: labelNode))
     }
+
+    private func buildLabelNode() -> SKSpriteNode {
+        let imageName = convergent ? "touchneg" : "touchpos"
+        let node = SKSpriteNode(imageNamed: imageName)
+        node.position = CGPoint(x: 0.1 * scene.width, y: 0.8 * scene.height)
+        node.size = CGSize(width: 180, height: 90)
+        return node
+    }
+
+    // MARK: - Manage Touches
 
     func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {

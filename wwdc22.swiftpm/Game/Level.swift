@@ -31,7 +31,7 @@ extension Level {
             ),
             Level(
                 [
-                    FieldManager(scene: scene),
+                    FieldManager(scene: scene, convergent: true),
                     Charge(position: CGPoint(
                         x: width / 4,
                         y: height / 2

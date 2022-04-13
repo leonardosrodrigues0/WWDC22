@@ -22,6 +22,7 @@ class GameScene: SKScene {
         physicsWorld.gravity = CGVector.zero
         physicsWorld.contactDelegate = self
         addBorder()
+        self.backgroundColor = UIColor(white: 0.1, alpha: 1)
     }
 
     private func addBorder() {
@@ -81,6 +82,7 @@ class GameScene: SKScene {
     }
 
     // MARK: - Manage Touches
+
     private var fieldManager: FieldManager? {
         entities.compactMap { entity in
             entity as? FieldManager

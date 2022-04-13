@@ -6,16 +6,15 @@ class Goal: GKEntity {
     
     init(position: CGPoint) {
         super.init()
-        let node = SKShapeNode(circleOfRadius: Self.size / 2)
-        node.fillColor = .green
-        node.strokeColor = .clear
+        let node = SKSpriteNode(imageNamed: "goal")
         node.position = position
+        node.size = CGSize(width: Self.size, height: Self.size)
         addPhysicsBody(node: node)
         addComponent(GeometryComponent(node: node))
     }
 
-    private func addPhysicsBody(node: SKShapeNode) {
-        node.physicsBody = SKPhysicsBody(polygonFrom: node.path!)
+    private func addPhysicsBody(node: SKSpriteNode) {
+        node.physicsBody = SKPhysicsBody(texture: node.texture!, size: CGSize(width: Self.size, height: Self.size))
         node.physicsBody?.isDynamic = false
         node.physicsBody?.categoryBitMask = PhysicsType.goal.rawValue
     }

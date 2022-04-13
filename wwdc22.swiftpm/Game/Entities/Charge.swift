@@ -4,18 +4,20 @@ class Charge: GKEntity {
 
     private static let size: CGFloat = 60
 
+    private let convergent: Bool
     private let type: PhysicsType
 
     init(position: CGPoint, convergent: Bool = false, type: PhysicsType = .charge1) {
+        self.convergent = convergent
         self.type = type
         super.init()
         let spriteNode = createSpriteNode(position: position)
         addComponent(GeometryComponent(node: spriteNode))
-        let fieldNode = createFieldNode(convergent: convergent)
+        let fieldNode = createFieldNode()
         spriteNode.addChild(fieldNode)
     }
 
-    private func createFieldNode(convergent: Bool) -> SKFieldNode {
+    private func createFieldNode() -> SKFieldNode {
         let fieldComponent = FieldComponent(strength: 2, convergent: convergent)
         let fieldNode = fieldComponent.fieldNode
         fieldNode.categoryBitMask = type.rawValue
@@ -23,16 +25,15 @@ class Charge: GKEntity {
     }
 
     private func createSpriteNode(position: CGPoint) -> SKNode {
-        let node = SKShapeNode(circleOfRadius: Self.size / 2)
-        node.fillColor = .white
-        node.strokeColor = .clear
+        let node = SKSpriteNode(imageNamed: convergent ? "negative" : "positive")
+        node.size = CGSize(width: Self.size, height: Self.size)
         node.position = position
         addPhysicsBody(node: node)
         return node
     }
 
-    private func addPhysicsBody(node: SKShapeNode) {
-        node.physicsBody = SKPhysicsBody(polygonFrom: node.path!)
+    private func addPhysicsBody(node: SKSpriteNode) {
+        node.physicsBody = SKPhysicsBody(texture: node.texture!, size: CGSize(width: Self.size, height: Self.size))
         node.physicsBody?.categoryBitMask = self.type.rawValue
         node.physicsBody?.collisionBitMask = PhysicsType.bitMask(for: [
             .allowedWall,
