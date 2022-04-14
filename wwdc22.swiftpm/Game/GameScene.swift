@@ -48,7 +48,7 @@ class GameScene: SKScene {
         let label = GameLabel("Level \(levelIndex + 1)", position: CGPoint(
             x: 0.1 * width,
             y: 0.9 * height
-        ))
+        ), type: .levelLabel)
 
         addEntity(label)
     }
@@ -131,15 +131,39 @@ extension GameScene: SKPhysicsContactDelegate {
         }
 
         if contactMask & PhysicsType.goal.rawValue != 0 {
-            if levelIndex < levels.count - 1 {
-                levelIndex += 1
-            } else {
-                levelIndex = 0
-            }
-
-            loadCurrentLevel()
+            chargeGoalContact(contact)
         } else if contactMask & PhysicsType.notAllowedWall.rawValue != 0 {
             loadCurrentLevel()
+        }
+    }
+
+    private func chargeGoalContact(_ contact: SKPhysicsContact) {
+        let charges = entities.compactMap { $0 as? Charge }
+        if charges.count < 2 {
+            goToNextLevel()
+            loadCurrentLevel()
+        } else {
+            let chargeNode: SKNode = {
+                if contact.bodyA.categoryBitMask == PhysicsType.goal.rawValue {
+                    return contact.bodyB.node!
+                } else {
+                    return contact.bodyA.node!
+                }
+            }()
+
+            let charge = charges.first { charge in
+                charge.component(ofType: GeometryComponent.self)!.node == chargeNode
+            }!
+
+            removeEntity(charge)
+        }
+    }
+
+    private func goToNextLevel() {
+        if levelIndex < levels.count - 1 {
+            levelIndex += 1
+        } else {
+            levelIndex = 0
         }
     }
 }

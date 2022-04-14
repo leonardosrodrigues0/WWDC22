@@ -18,6 +18,34 @@ extension Level {
         return [
             Level(
                 [
+                    GameLabel("Throw charges in the goals", position: CGPoint(
+                        x: width / 2,
+                        y: 0.85 * height
+                    )),
+                    Charge(position: CGPoint(
+                        x: 3 * width / 7,
+                        y: height / 2
+                    ), type: .charge1),
+                    Charge(position: CGPoint(
+                        x: 4 * width / 7,
+                        y: height / 2
+                    ), type: .charge2),
+                    Goal(position: CGPoint(
+                        x: 1 * width / 7,
+                        y: height / 2
+                    )),
+                    Goal(position: CGPoint(
+                        x: 6 * width / 7,
+                        y: height / 2
+                    ))
+                ]
+            ),
+            Level(
+                [
+                    GameLabel("Touch to create fields", position: CGPoint(
+                        x: width / 2,
+                        y: 0.85 * height
+                    )),
                     FieldManager(scene: scene),
                     Charge(position: CGPoint(
                         x: width / 4,
@@ -31,6 +59,10 @@ extension Level {
             ),
             Level(
                 [
+                    GameLabel("Attention to the type of field created", position: CGPoint(
+                        x: width / 2,
+                        y: 0.85 * height
+                    )),
                     FieldManager(scene: scene, convergent: true),
                     Charge(position: CGPoint(
                         x: width / 4,
