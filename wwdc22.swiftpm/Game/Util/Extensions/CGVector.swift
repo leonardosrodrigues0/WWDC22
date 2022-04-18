@@ -16,4 +16,16 @@ extension CGVector {
     var orientation: CGFloat {
         atan2(dy, dx)
     }
+
+    func sum(vector: CGVector) -> CGVector {
+        return CGVector(dx: dx + vector.dx, dy: dy + vector.dy)
+    }
+
+    func difference(vector: CGVector) -> CGVector {
+        return CGVector(dx: dx - vector.dx, dy: dy - vector.dy)
+    }
+
+    func multiply(scalar: CGFloat) -> CGVector {
+        return CGVector(dx: dx * scalar, dy: dy * scalar)
+    }
 }

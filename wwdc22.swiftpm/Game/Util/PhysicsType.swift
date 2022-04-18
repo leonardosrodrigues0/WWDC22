@@ -1,6 +1,7 @@
 import Foundation
 
 enum PhysicsType: UInt32, CaseIterable {
+    case menuWall = 1
     case allowedWall = 2
     case notAllowedWall = 4
     case goal = 8

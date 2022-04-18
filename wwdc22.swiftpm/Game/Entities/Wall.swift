@@ -4,7 +4,7 @@ class Wall: GKEntity {
 
     var baseThickness: CGFloat { 40 }
     var physicsType: PhysicsType { .notAllowedWall }
-    var color: UIColor { UIColor(r: 200, g: 50, b: 50) }
+    var color: UIColor { UIColor(r: 150, g: 50, b: 200) }
 
     init(_ pointA: CGPoint, _ pointB: CGPoint) {
         super.init()

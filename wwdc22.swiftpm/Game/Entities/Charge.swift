@@ -40,7 +40,7 @@ class Charge: GKEntity {
             .notAllowedWall
         ]) | PhysicsType.chargesMask
 
-        node.physicsBody?.contactTestBitMask = PhysicsType.notAllowedWall.rawValue | PhysicsType.goal.rawValue
+        node.physicsBody?.contactTestBitMask = PhysicsType.notAllowedWall.rawValue | PhysicsType.goal.rawValue | PhysicsType.menuWall.rawValue
         node.physicsBody?.restitution = 1
         node.physicsBody?.linearDamping = 0
         node.physicsBody?.fieldBitMask = PhysicsType.chargesMask & (~type.rawValue)

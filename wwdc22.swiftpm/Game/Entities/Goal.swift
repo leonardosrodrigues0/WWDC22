@@ -2,11 +2,11 @@ import GameplayKit
 
 class Goal: GKEntity {
 
-    private static let size: CGFloat = 60
+    private static let size: CGFloat = 73
     
     init(position: CGPoint) {
         super.init()
-        let node = SKSpriteNode(imageNamed: "goal")
+        let node = SKSpriteNode(imageNamed: "target")
         node.position = position
         node.size = CGSize(width: Self.size, height: Self.size)
         addPhysicsBody(node: node)

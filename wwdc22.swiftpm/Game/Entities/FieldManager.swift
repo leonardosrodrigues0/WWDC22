@@ -4,11 +4,13 @@ class FieldManager: GKEntity {
 
     private var fields: [UITouch: Field]
     private let convergent: Bool
+    private let indicator: Bool
     weak var scene: GameScene!
 
-    init(scene: GameScene, convergent: Bool = false) {
+    init(scene: GameScene, convergent: Bool = false, indicator: Bool = false) {
         self.scene = scene
         self.convergent = convergent
+        self.indicator = indicator
         fields = [:]
         super.init()
         let labelNode = buildLabelNode()
@@ -16,11 +18,32 @@ class FieldManager: GKEntity {
     }
 
     private func buildLabelNode() -> SKSpriteNode {
-        let imageName = convergent ? "touchneg" : "touchpos"
+        let imageName: String = {
+            switch (indicator, convergent) {
+            case (true, true):
+                return "indicatorneg"
+            case (true, false):
+                return "indicatorpos"
+            case (false, true):
+                return "touchneg"
+            case (false, false):
+                return "touchpos"
+            }
+        }()
         let node = SKSpriteNode(imageNamed: imageName)
-        node.position = CGPoint(x: 0.1 * scene.width, y: 0.8 * scene.height)
-        node.size = CGSize(width: 180, height: 90)
+        node.position = CGPoint(x: 0.05 * scene.width, y: 0.8 * scene.height)
+        node.size = CGSize(width: indicator ? 315 : 180, height: 90)
+        node.anchorPoint = CGPoint(x: 0, y: 0.5)
         return node
+    }
+
+    private func addIndicator(node: SKNode) {
+        let image = UIImage(systemName: "arrowshape.turn.up.left.fill")!
+        let indicatorNode = SKSpriteNode(texture: SKTexture(image: image), size: CGSize(width: 90, height: 90))
+        indicatorNode.color = .white
+        indicatorNode.colorBlendFactor = 1
+        node.addChild(indicatorNode)
+        indicatorNode.position = CGPoint(x: 120, y: 0)
     }
 
     // MARK: - Manage Touches

@@ -23,6 +23,7 @@ class GameScene: SKScene {
         physicsWorld.contactDelegate = self
         addBorder()
         self.backgroundColor = UIColor(white: 0.1, alpha: 1)
+        loadMenuLevel()
     }
 
     private func addBorder() {
@@ -33,12 +34,24 @@ class GameScene: SKScene {
         self.physicsBody?.categoryBitMask = PhysicsType.notAllowedWall.rawValue
     }
 
-    override func sceneDidLoad() {
-        loadCurrentLevel()
+    private func activateBorder() {
+        self.physicsBody?.categoryBitMask = PhysicsType.notAllowedWall.rawValue
     }
 
-    private func loadCurrentLevel() {
+    private func deactivateBorder() {
+        self.physicsBody?.categoryBitMask = 0
+    }
+
+    private func loadMenuLevel() {
         removeAllEntities()
+        deactivateBorder()
+        lastUpdateTime = 0
+        addEntities(Level.menuLevel(scene: self).build())
+    }
+
+    func loadCurrentLevel() {
+        removeAllEntities()
+        activateBorder()
         lastUpdateTime = 0
         addLevelLabel()
         addEntities(levels[levelIndex].build())
@@ -47,7 +60,7 @@ class GameScene: SKScene {
     private func addLevelLabel() {
         let label = GameLabel("Level \(levelIndex + 1)", position: CGPoint(
             x: 0.1 * width,
-            y: 0.9 * height
+            y: 0.95 * height
         ), type: .levelLabel)
 
         addEntity(label)
@@ -133,7 +146,19 @@ extension GameScene: SKPhysicsContactDelegate {
         if contactMask & PhysicsType.goal.rawValue != 0 {
             chargeGoalContact(contact)
         } else if contactMask & PhysicsType.notAllowedWall.rawValue != 0 {
-            loadCurrentLevel()
+            DispatchQueue.main.async {
+                self.loadCurrentLevel()
+            }
+        } else if contactMask & PhysicsType.menuWall.rawValue != 0 {
+            let chargeNode = chargeNode(contact)
+            let charges = entities.compactMap { $0 as? Charge }
+            guard let charge = charges.first(where: { charge in
+                charge.component(ofType: GeometryComponent.self)!.node == chargeNode
+            }) else {
+                return
+            }
+
+            removeEntity(charge)
         }
     }
 
@@ -141,16 +166,8 @@ extension GameScene: SKPhysicsContactDelegate {
         let charges = entities.compactMap { $0 as? Charge }
         if charges.count < 2 {
             goToNextLevel()
-            loadCurrentLevel()
         } else {
-            let chargeNode: SKNode = {
-                if contact.bodyA.categoryBitMask == PhysicsType.goal.rawValue {
-                    return contact.bodyB.node!
-                } else {
-                    return contact.bodyA.node!
-                }
-            }()
-
+            let chargeNode = chargeNode(contact)
             let charge = charges.first { charge in
                 charge.component(ofType: GeometryComponent.self)!.node == chargeNode
             }!
@@ -159,11 +176,23 @@ extension GameScene: SKPhysicsContactDelegate {
         }
     }
 
-    private func goToNextLevel() {
-        if levelIndex < levels.count - 1 {
-            levelIndex += 1
+    private func chargeNode(_ contact: SKPhysicsContact) -> SKNode {
+        if contact.bodyA.categoryBitMask & PhysicsType.chargesMask != 0 {
+            return contact.bodyA.node!
         } else {
-            levelIndex = 0
+            return contact.bodyB.node!
+        }
+    }
+
+    func goToNextLevel() {
+        DispatchQueue.main.async {
+            if self.levelIndex < self.levels.count - 1 {
+                self.levelIndex += 1
+                self.loadCurrentLevel()
+            } else {
+                self.levelIndex = 0
+                self.loadMenuLevel()
+            }
         }
     }
 }
