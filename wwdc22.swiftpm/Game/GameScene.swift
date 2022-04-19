@@ -42,7 +42,8 @@ class GameScene: SKScene {
         self.physicsBody?.categoryBitMask = 0
     }
 
-    private func loadMenuLevel() {
+    func loadMenuLevel() {
+        levelIndex = 0
         removeAllEntities()
         deactivateBorder()
         lastUpdateTime = 0
@@ -55,6 +56,13 @@ class GameScene: SKScene {
         lastUpdateTime = 0
         addLevelLabel()
         addEntities(levels[levelIndex].build())
+    }
+
+    func loadEndLevel() {
+        removeAllEntities()
+        deactivateBorder()
+        lastUpdateTime = 0
+        addEntities(Level.endLevel(scene: self).build())
     }
 
     private func addLevelLabel() {
@@ -131,6 +139,15 @@ class GameScene: SKScene {
         self.lastUpdateTime = currentTime
     }
 
+    func goToNextLevel() {
+        if self.levelIndex < self.levels.count - 1 {
+            self.levelIndex += 1
+            self.loadCurrentLevel()
+        } else {
+            self.loadEndLevel()
+        }
+    }
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -200,16 +217,6 @@ extension GameScene: SKPhysicsContactDelegate {
             return contact.bodyA.node
         } else {
             return contact.bodyB.node
-        }
-    }
-
-    func goToNextLevel() {
-        if self.levelIndex < self.levels.count - 1 {
-            self.levelIndex += 1
-            self.loadCurrentLevel()
-        } else {
-            self.levelIndex = 0
-            self.loadMenuLevel()
         }
     }
 }
