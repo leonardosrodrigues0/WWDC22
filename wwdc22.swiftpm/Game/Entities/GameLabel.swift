@@ -16,7 +16,7 @@ enum TextStyle {
 
 class GameLabel: GKEntity {
 
-    init(_ text: String, position: CGPoint, scene: GameScene, type: TextStyle = .title, size: CGFloat = 60) {
+    init(_ text: String, position: CGPoint, scene: GameScene, type: TextStyle = .title, size: CGFloat = 60, limitedSpace: Bool = true) {
         super.init()
         let attrString = NSMutableAttributedString(string: text)
         let paragraphStyle = NSMutableParagraphStyle()
@@ -27,8 +27,10 @@ class GameLabel: GKEntity {
         let node = SKLabelNode(attributedText: attrString)
         node.position = position
         node.numberOfLines = 0
-        node.preferredMaxLayoutWidth = 0.5 * scene.width
         node.verticalAlignmentMode = .top
+        if limitedSpace {
+            node.preferredMaxLayoutWidth = 0.5 * scene.width
+        }
         addComponent(GeometryComponent(node: node))
     }
 

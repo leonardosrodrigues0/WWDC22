@@ -13,8 +13,6 @@ class FieldManager: GKEntity {
         self.indicator = indicator
         fields = [:]
         super.init()
-        let labelNode = buildLabelNode(scene: scene)
-        addComponent(GeometryComponent(node: labelNode))
     }
 
     private func buildLabelNode(scene: GameScene) -> SKSpriteNode {

@@ -16,9 +16,7 @@ class Play: GKEntity {
     }
 
     fileprivate func start() {
-//        DispatchQueue.main.async {
-            self.scene.loadCurrentLevel()
-//        }
+        self.scene.loadCurrentLevel()
     }
 
     required init?(coder: NSCoder) {

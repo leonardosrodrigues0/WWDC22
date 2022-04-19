@@ -14,7 +14,7 @@ class MenuChargeGenerator: GKEntity {
     init(scene: GameScene, position: CGPoint) {
         self.scene = scene
         self.position = position
-        self.radius = 1.5 * scene.width
+        self.radius = 3 * scene.height
         super.init()
         let node = createNode()
         node.position = position

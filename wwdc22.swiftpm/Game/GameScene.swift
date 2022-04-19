@@ -149,12 +149,14 @@ extension GameScene: SKPhysicsContactDelegate {
         case .menuWall:
             removeEntity(charge)
         case .notAllowedWall:
-//            DispatchQueue.main.async {
-                self.loadCurrentLevel()
-//            }
+            self.loadCurrentLevel()
+            let generator = UINotificationFeedbackGenerator()
+            generator.notificationOccurred(.error)
         case .goal:
             let charges = entities.compactMap { $0 as? Charge }
             if charges.count < 2 {
+                let generator = UINotificationFeedbackGenerator()
+                generator.notificationOccurred(.success)
                 goToNextLevel()
             } else {
                 removeEntity(charge)
@@ -202,14 +204,12 @@ extension GameScene: SKPhysicsContactDelegate {
     }
 
     func goToNextLevel() {
-//        DispatchQueue.main.async {
-            if self.levelIndex < self.levels.count - 1 {
-                self.levelIndex += 1
-                self.loadCurrentLevel()
-            } else {
-                self.levelIndex = 0
-                self.loadMenuLevel()
-            }
-//        }
+        if self.levelIndex < self.levels.count - 1 {
+            self.levelIndex += 1
+            self.loadCurrentLevel()
+        } else {
+            self.levelIndex = 0
+            self.loadMenuLevel()
+        }
     }
 }

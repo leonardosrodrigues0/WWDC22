@@ -20,10 +20,10 @@ extension Level {
                 x: width / 2,
                 y: height / 2
             )),
-            GameLabel("Welcome", position: CGPoint(
+            GameLabel("Field Control", position: CGPoint(
                 x: width / 2,
                 y: 0.8 * height
-            ), scene: scene, size: 120),
+            ), scene: scene, size: 120, limitedSpace: false),
             Play(scene: scene, position: CGPoint(
                 x: width / 2,
                 y: 2 * height / 5
@@ -35,58 +35,58 @@ extension Level {
         let height = scene.size.height
         let width = scene.size.width
         return [
-            Level(
-                [
-                    Charge(position: CGPoint(
-                        x: 3 * width / 7,
-                        y: height / 2
-                    ), type: .charge1),
-                    Charge(position: CGPoint(
-                        x: 4 * width / 7,
-                        y: height / 2
-                    ), type: .charge2),
-                    Goal(position: CGPoint(
-                        x: 1 * width / 7,
-                        y: height / 2
-                    )),
-                    Goal(position: CGPoint(
-                        x: 6 * width / 7,
-                        y: height / 2
-                    )),
-                    GameLabel("Throw charges in the targets", position: CGPoint(
-                        x: width / 2,
-                        y: 0.95 * height
-                    ), scene: scene)
-                ]
-            ),
-            Level(
-                [
-                    Charge(position: CGPoint(
-                        x: 5 * width / 7,
-                        y: height / 2
-                    ), type: .charge1),
-                    Charge(position: CGPoint(
-                        x: 2.2 * width / 7,
-                        y: height / 2
-                    ), type: .charge2),
-                    Charge(position: CGPoint(
-                        x: 2 * width / 7,
-                        y: height / 2
-                    ), type: .charge3),
-                    Goal(position: CGPoint(
-                        x: 1 * width / 7,
-                        y: height / 2
-                    )),
-                    Goal(position: CGPoint(
-                        x: 6 * width / 7,
-                        y: height / 2
-                    )),
-                    GameLabel("Closer interactions create stronger forces", position: CGPoint(
-                        x: width / 2,
-                        y: 0.95 * height
-                    ), scene: scene)
-                ]
-            ),
+//            Level(
+//                [
+//                    Charge(position: CGPoint(
+//                        x: 3 * width / 7,
+//                        y: height / 2
+//                    ), type: .charge1),
+//                    Charge(position: CGPoint(
+//                        x: 4 * width / 7,
+//                        y: height / 2
+//                    ), type: .charge2),
+//                    Goal(position: CGPoint(
+//                        x: 1 * width / 7,
+//                        y: height / 2
+//                    )),
+//                    Goal(position: CGPoint(
+//                        x: 6 * width / 7,
+//                        y: height / 2
+//                    )),
+//                    GameLabel("Throw charges in the targets", position: CGPoint(
+//                        x: width / 2,
+//                        y: 0.95 * height
+//                    ), scene: scene)
+//                ]
+//            ),
+//            Level(
+//                [
+//                    Charge(position: CGPoint(
+//                        x: 5 * width / 7,
+//                        y: height / 2
+//                    ), type: .charge1),
+//                    Charge(position: CGPoint(
+//                        x: 2.2 * width / 7,
+//                        y: height / 2
+//                    ), type: .charge2),
+//                    Charge(position: CGPoint(
+//                        x: 2 * width / 7,
+//                        y: height / 2
+//                    ), type: .charge3),
+//                    Goal(position: CGPoint(
+//                        x: 1 * width / 7,
+//                        y: height / 2
+//                    )),
+//                    Goal(position: CGPoint(
+//                        x: 6 * width / 7,
+//                        y: height / 2
+//                    )),
+//                    GameLabel("Closer interactions create stronger forces", position: CGPoint(
+//                        x: width / 2,
+//                        y: 0.95 * height
+//                    ), scene: scene)
+//                ]
+//            ),
             Level(
                 [
                     Charge(position: CGPoint(
@@ -121,8 +121,8 @@ extension Level {
                         x: width / 2,
                         y: height / 2
                     )),
-                    FieldManager(scene: scene, convergent: true, indicator: true),
-                    GameLabel("Attention to the type of field created", position: CGPoint(
+                    FieldManager(scene: scene, indicator: true),
+                    GameLabel("Avoid the walls", position: CGPoint(
                         x: width / 2,
                         y: 0.95 * height
                     ), scene: scene)

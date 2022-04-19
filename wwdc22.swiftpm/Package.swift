@@ -8,13 +8,13 @@ import PackageDescription
 import AppleProductTypes
 
 let package = Package(
-    name: "wwdc22",
+    name: "Field Control",
     platforms: [
         .iOS("15.2")
     ],
     products: [
         .iOSApplication(
-            name: "wwdc22",
+            name: "Field Control",
             targets: ["AppModule"],
             bundleIdentifier: "com.leo.wwdc22",
             teamIdentifier: "3W2GZBLUSM",
@@ -28,7 +28,7 @@ let package = Package(
             ],
             supportedInterfaceOrientations: [
                 .landscapeRight,
-                .landscapeLeft,
+                .landscapeLeft
             ]
         )
     ],
