@@ -3,21 +3,23 @@ import GameplayKit
 class MenuChargeGenerator: GKEntity {
 
     private static let interval: TimeInterval = 2
-    private static let radius: CGFloat = 2 * UIScreen.main.bounds.width
     private static let speed: CGFloat = 1
 
     weak var scene: GameScene!
     private var lastGenerated: TimeInterval = 0
     private var lastUpdated: TimeInterval = 0
     private let position: CGPoint
+    private let radius: CGFloat
 
     init(scene: GameScene, position: CGPoint) {
         self.scene = scene
         self.position = position
+        self.radius = 1.5 * scene.width
         super.init()
         let node = createNode()
         node.position = position
         addComponent(GeometryComponent(node: node))
+        generateCharges()
     }
 
     override func update(deltaTime seconds: TimeInterval) {
@@ -41,7 +43,7 @@ class MenuChargeGenerator: GKEntity {
     }
 
     private func createNode() -> SKShapeNode {
-        let node = SKShapeNode(circleOfRadius: Self.radius)
+        let node = SKShapeNode(circleOfRadius: radius)
         node.fillColor = .clear
         node.strokeColor = .white
         node.physicsBody = SKPhysicsBody(edgeLoopFrom: node.path!)
@@ -52,8 +54,8 @@ class MenuChargeGenerator: GKEntity {
     private func randomPoints() -> (CGPoint, CGPoint) {
         let angle = Double.random(in: 0 ... 2 * CGFloat.pi)
         let vector = CGVector(
-            dx: (Self.radius - 50) * cos(angle),
-            dy: (Self.radius - 50) * sin(angle)
+            dx: (radius - 50) * cos(angle),
+            dy: (radius - 50) * sin(angle)
         )
 
         let posVector = CGVector(pointA: .zero, pointB: self.position)

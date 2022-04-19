@@ -13,11 +13,11 @@ class FieldManager: GKEntity {
         self.indicator = indicator
         fields = [:]
         super.init()
-        let labelNode = buildLabelNode()
+        let labelNode = buildLabelNode(scene: scene)
         addComponent(GeometryComponent(node: labelNode))
     }
 
-    private func buildLabelNode() -> SKSpriteNode {
+    private func buildLabelNode(scene: GameScene) -> SKSpriteNode {
         let imageName: String = {
             switch (indicator, convergent) {
             case (true, true):
@@ -31,8 +31,8 @@ class FieldManager: GKEntity {
             }
         }()
         let node = SKSpriteNode(imageNamed: imageName)
-        node.position = CGPoint(x: 0.05 * scene.width, y: 0.8 * scene.height)
-        node.size = CGSize(width: indicator ? 315 : 180, height: 90)
+        node.position = CGPoint(x: 0.05 * scene.width, y: 0.75 * scene.height)
+        node.size = CGSize(width: (indicator ? 0.315 : 0.180) / 2 * scene.width, height: 0.090 / 2 * scene.width)
         node.anchorPoint = CGPoint(x: 0, y: 0.5)
         return node
     }

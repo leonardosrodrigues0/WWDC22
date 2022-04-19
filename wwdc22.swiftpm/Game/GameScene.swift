@@ -61,7 +61,7 @@ class GameScene: SKScene {
         let label = GameLabel("Level \(levelIndex + 1)", position: CGPoint(
             x: 0.1 * width,
             y: 0.95 * height
-        ), type: .levelLabel)
+        ), scene: self, type: .levelLabel)
 
         addEntity(label)
     }
