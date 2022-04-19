@@ -35,30 +35,30 @@ extension Level {
         let height = scene.size.height
         let width = scene.size.width
         return [
-//            Level(
-//                [
-//                    Charge(position: CGPoint(
-//                        x: 3 * width / 7,
-//                        y: height / 2
-//                    ), type: .charge1),
-//                    Charge(position: CGPoint(
-//                        x: 4 * width / 7,
-//                        y: height / 2
-//                    ), type: .charge2),
-//                    Goal(position: CGPoint(
-//                        x: 1 * width / 7,
-//                        y: height / 2
-//                    )),
-//                    Goal(position: CGPoint(
-//                        x: 6 * width / 7,
-//                        y: height / 2
-//                    )),
-//                    GameLabel("Throw charges in the targets", position: CGPoint(
-//                        x: width / 2,
-//                        y: 0.95 * height
-//                    ), scene: scene)
-//                ]
-//            ),
+            Level(
+                [
+                    Charge(position: CGPoint(
+                        x: 3 * width / 7,
+                        y: height / 2
+                    ), type: .charge1),
+                    Charge(position: CGPoint(
+                        x: 4 * width / 7,
+                        y: height / 2
+                    ), type: .charge2),
+                    Goal(position: CGPoint(
+                        x: 1 * width / 7,
+                        y: height / 2
+                    )),
+                    Goal(position: CGPoint(
+                        x: 6 * width / 7,
+                        y: height / 2
+                    )),
+                    GameLabel("Throw charges in the targets", position: CGPoint(
+                        x: width / 2,
+                        y: 0.95 * height
+                    ), scene: scene)
+                ]
+            ),
             Level(
                 [
                     Charge(position: CGPoint(
