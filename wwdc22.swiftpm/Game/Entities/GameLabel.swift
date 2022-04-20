@@ -30,6 +30,8 @@ class GameLabel: GKEntity {
         node.verticalAlignmentMode = .top
         if limitedSpace {
             node.preferredMaxLayoutWidth = 0.5 * scene.width
+            let fadeOut = SKAction.fadeOut(withDuration: 3.0)
+            node.run(fadeOut)
         }
         addComponent(GeometryComponent(node: node))
     }
